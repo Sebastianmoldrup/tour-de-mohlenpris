@@ -1,3 +1,5 @@
+# Tour De Mohlenpris
+
 **Beskrivelse:**  
 Mohlenpris-borettslag arrangerer årlig et sosialt arrangement kalt _Tour De Mohlenpris_, som fremmer samhold og nettverksbygging ved å matche beboere med forskjellige verter for måltider. Hver vert tilbyr en 3-retters middag som inkluderer forrett, hovedrett og dessert. Deltakere (gjester) blir matchet med vertene på en måte som fremmer nye bekjentskaper. Dette prosjektet har som mål å effektivisere prosessen med å tildele gjester til verter ved hjelp av et nettsidegrensesnitt, som automatisk importerer, sorterer og eksporterer informasjon via CSV-filer.
 
