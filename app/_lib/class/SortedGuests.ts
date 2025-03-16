@@ -1,20 +1,20 @@
-import { GuestsArray } from "@/app/_lib/types";
+import { GuestType } from "@/app/_lib/types";
 
 export class SortedGuests {
-  guests: GuestsArray;
+  guests: GuestType[];
 
-  constructor(guests: GuestsArray) {
+  constructor(guests: GuestType[]) {
     this.guests = guests;
     // console.log(guests);
   }
 
-  sortByVegeterian() {
+  sortByVegeterian(): GuestType[] {
     return this.guests.filter(
-      (g) => g.vegeterian && g.vegeterian.toLowerCase() !== "nei",
+      (g: GuestType) => g.vegeterian && g.vegeterian.toLowerCase() !== "nei",
     );
   }
 
-  sortByAllergic() {
+  sortByAllergic(): GuestType[] {
     return this.guests.filter(
       (g) =>
         g.allergy &&
@@ -22,7 +22,7 @@ export class SortedGuests {
     );
   }
 
-  sortByNormal() {
+  sortByNormal(): GuestType[] {
     return this.guests.filter(
       (g) =>
         !g.allergy ||

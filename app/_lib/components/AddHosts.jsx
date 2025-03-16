@@ -26,7 +26,7 @@ export default function AddHosts() {
       reader.onload = (e) => {
         const csvData = e.target.result;
         const json = csvToJson(csvData);
-        console.log(json);
+        // console.log(json);
         const hosts = json.map((obj) => {
           return new Host(obj);
         });

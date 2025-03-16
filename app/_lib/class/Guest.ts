@@ -1,4 +1,4 @@
-import { GuestType } from "@/app/_lib/types";
+import { GuestType, HostType, MealType } from "@/app/_lib/types";
 
 export class Guest {
   guest: GuestType;
@@ -9,6 +9,11 @@ export class Guest {
   co_guest: string | null | undefined;
   phone: number | undefined;
   count: number;
+  visited: {
+    app: HostType[];
+    dinner: HostType[];
+    dessert: HostType[];
+  };
 
   constructor(guest: GuestType) {
     this.guest = guest;
@@ -19,13 +24,27 @@ export class Guest {
     this.phone = guest.phone;
     this.co_guest = guest.co_guest;
     this.count = this.getGuestCount();
+    this.visited = {
+      app: [],
+      dinner: [],
+      dessert: [],
+    };
   }
 
-  getGuestCount() {
+  getGuestCount(): number {
     if (this.co_guest) {
       return this.co_guest.split(",").length + 1;
     } else {
       return 1;
     }
+  }
+
+  hasVisited(meal: MealType): boolean {
+    return this.visited[meal].length > 0 ? true : false;
+  }
+
+  setVisited(meal: MealType, host: HostType): void {
+    this.visited[meal].push(host);
+    return;
   }
 }

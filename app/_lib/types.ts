@@ -5,8 +5,14 @@ export interface GuestType {
   co_guest?: string | null;
   vegeterian?: string | null;
   phone?: number;
+  visited?: {
+    app: string[];
+    dinner: string[];
+    dessert: string[];
+  };
 }
-export type GuestsArray = GuestType[];
+
+export type MealType = "app" | "dinner" | "dessert";
 
 export interface HostJsonType {
   name: string;
@@ -25,17 +31,10 @@ export interface HostType extends HostJsonType {
     dinner: string;
     dessert: string;
   };
-  dietary: {
-    allergy: {
-      app: string | null;
-      dinner: string | null;
-      dessert: string | null;
-    };
-    veg: {
-      app: boolean;
-      dinner: boolean;
-      dessert: boolean;
-    };
+  allergy: {
+    app: string | null;
+    dinner: string | null;
+    dessert: string | null;
   };
   guests: {
     appetizer: string[];
@@ -43,4 +42,3 @@ export interface HostType extends HostJsonType {
     dessert: string[];
   };
 }
-export type HostsArray = HostType[];
