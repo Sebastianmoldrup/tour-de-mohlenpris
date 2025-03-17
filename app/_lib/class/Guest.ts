@@ -1,4 +1,5 @@
-import { GuestType, HostType, MealType } from "@/app/_lib/types";
+import { GuestType, MealType } from "@/app/_lib/types";
+import { Host } from "@/app/_lib/class/Host";
 
 export class Guest {
   guest: GuestType;
@@ -10,9 +11,9 @@ export class Guest {
   phone: number | undefined;
   count: number;
   visited: {
-    app: HostType[];
-    dinner: HostType[];
-    dessert: HostType[];
+    app: Host[];
+    dinner: Host[];
+    dessert: Host[];
   };
 
   constructor(guest: GuestType) {
@@ -43,7 +44,8 @@ export class Guest {
     return this.visited[meal].length > 0 ? true : false;
   }
 
-  setVisited(meal: MealType, host: HostType): void {
+  setVisited(meal: MealType, host: Host): void {
+    console.log("set visited");
     this.visited[meal].push(host);
     return;
   }
