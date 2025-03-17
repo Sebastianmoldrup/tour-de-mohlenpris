@@ -1,47 +1,35 @@
-import { HostJsonType } from "@/app/_lib/types";
-
-export class Host {
+interface HostType {
+  appetizer: string;
+  appetizer_allergy: string | null;
+  dinner: string;
+  dinner_allergy: string | null;
+  dessert: string;
+  dessert_allergy: string | null;
+  id: number;
   name: string;
   seats: number;
-  menu: {
-    appetizer: string;
-    dinner: string;
-    dessert: string;
-  };
-  allergy: {
-    app: string | null;
-    dinner: string | null;
-    dessert: string | null;
-  };
-  guests: {
-    appetizer: string[];
-    dinner: string[];
-    dessert: string[];
-  };
+}
 
-  constructor(host: HostJsonType) {
-    this.name = host.name;
-    this.seats = host.seats;
+export class Host {
+  #id: number;
+  #name: string;
+  #seats: number;
+  #appetizer: string;
+  #appetizer_allergy: string | null;
+  #dinner: string;
+  #dinner_allergy: string | null;
+  #dessert: string;
+  #dessert_allergy: string | null;
 
-    // Host menu
-    this.menu = {
-      appetizer: host.appetizer,
-      dinner: host.dinner,
-      dessert: host.dessert,
-    };
-
-    // Host meal allergy & vegeterian
-    this.allergy = {
-      app: host.appetizer_allergy ?? null,
-      dinner: host.dinner_allergy ?? null,
-      dessert: host.dessert_allergy ?? null,
-    };
-
-    // Host meal guests
-    this.guests = {
-      appetizer: [],
-      dinner: [],
-      dessert: [],
-    };
+  constructor(host: HostType) {
+    this.#id = host.id;
+    this.#name = host.name;
+    this.#seats = host.seats;
+    this.#appetizer = host.appetizer;
+    this.#appetizer_allergy = host.appetizer_allergy;
+    this.#dinner = host.dinner;
+    this.#dinner_allergy = host.dinner_allergy;
+    this.#dessert = host.dessert;
+    this.#dessert_allergy = host.dessert_allergy;
   }
 }

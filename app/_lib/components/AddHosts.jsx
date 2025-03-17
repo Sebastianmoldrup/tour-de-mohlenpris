@@ -27,10 +27,10 @@ export default function AddHosts() {
         const csvData = e.target.result;
         const json = csvToJson(csvData);
         // console.log(json);
-        const hosts = json.map((obj) => {
-          return new Host(obj);
-        });
-        setHosts(hosts);
+        // const hosts = json.map((obj) => {
+        //   return new Host(obj);
+        // });
+        setHosts(json);
       };
       reader.readAsText(file);
     }

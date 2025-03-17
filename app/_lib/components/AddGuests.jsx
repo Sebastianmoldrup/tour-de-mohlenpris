@@ -26,10 +26,10 @@ export default function AddGuests() {
       reader.onload = (e) => {
         const csvData = e.target.result;
         const json = csvToJson(csvData);
-        const guests = json.map((obj) => {
-          return new Guest(obj);
-        });
-        setGuests(guests);
+        // const guests = json.map((obj) => {
+        //   return new Guest(obj);
+        // });
+        setGuests(json);
       };
       reader.readAsText(file);
     }
