@@ -16,9 +16,15 @@ export class Meals {
     });
   }
 
-  getVegMeals(value: string): Meal[] {
+  getVisited(value: string) {
     return this.meals.filter((meal: Meal): boolean => {
-      return meal.name === value && meal.vegeterian;
+      return meal.name === value;
+    });
+  }
+
+  getVegMeals(value: Meal): Meal[] {
+    return this.meals.filter((meal: Meal): boolean => {
+      return meal.name === value.name;
     });
   }
 
@@ -35,6 +41,8 @@ export class Meals {
 
     const randomIndex = Math.floor(Math.random() * value.length);
     const randomMeal = value[randomIndex];
+
+    console.log(this.getVisited(value));
 
     // Check if the guest has already visited this host
     if (guest.hasVisited(randomMeal.hostName)) {
