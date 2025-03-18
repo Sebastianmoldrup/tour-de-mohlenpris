@@ -1,25 +1,35 @@
-interface GuestType {
-  allergy: string | null;
-  co_guest: string | null;
+interface HostType {
+  appetizer: string;
+  appetizer_allergy: string | null;
+  dinner: string;
+  dinner_allergy: string | null;
+  dessert: string;
+  dessert_allergy: string | null;
   id: number;
-  last_name: string;
   name: string;
-  vegeterian: string | null;
+  seats: number;
 }
 
-export class Guest {
-  #id: number;
-  #name: string;
-  #last_name: string;
-  #allergy: string | null;
-  #vegeterian: string | null;
-  #co_guest: string | null;
-  constructor(guest: GuestType) {
-    this.#id = guest.id;
-    this.#name = guest.name;
-    this.#last_name = guest.last_name;
-    this.#allergy = guest.allergy;
-    this.#vegeterian = guest.vegeterian;
-    this.#co_guest = guest.co_guest;
+export class Host {
+  id: number;
+  name: string;
+  seats: number;
+  appetizer: string;
+  appetizer_allergy: string | null;
+  dinner: string;
+  dinner_allergy: string | null;
+  dessert: string;
+  dessert_allergy: string | null;
+
+  constructor(host: HostType) {
+    this.id = host.id;
+    this.name = host.name;
+    this.seats = host.seats;
+    this.appetizer = host.appetizer;
+    this.appetizer_allergy = host.appetizer_allergy;
+    this.dinner = host.dinner;
+    this.dinner_allergy = host.dinner_allergy;
+    this.dessert = host.dessert;
+    this.dessert_allergy = host.dessert_allergy;
   }
 }

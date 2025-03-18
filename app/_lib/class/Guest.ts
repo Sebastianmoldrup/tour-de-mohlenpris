@@ -1,31 +1,53 @@
 import { GuestType } from "@/app/_lib/types";
+import { Host } from "@/app/_lib/class/Host";
 
 export class Guest {
-  guest: GuestType;
-  allergy: string | null | undefined;
-  vegeterian: string | null | undefined;
+  id: number;
   name: string;
   last_name: string;
-  co_guest: string | null | undefined;
-  phone: number | undefined;
+  allergy: string[] | null;
+  vegeterian: boolean;
+  co_guest: string | null;
   count: number;
-
+  visited: Host[];
+  metGuests: Guest[];
   constructor(guest: GuestType) {
-    this.guest = guest;
-    this.allergy = guest.allergy;
-    this.vegeterian = guest.vegeterian;
+    this.id = guest.id;
     this.name = guest.name;
     this.last_name = guest.last_name;
-    this.phone = guest.phone;
+    this.visited = [];
+    this.metGuests = [];
+    this.allergy = this.parseAllergy(guest.allergy);
+    this.vegeterian = this.parseVegeterian(guest.vegeterian);
     this.co_guest = guest.co_guest;
-    this.count = this.getGuestCount();
+    this.count = this.parseCount(guest.co_guest);
   }
 
-  getGuestCount() {
-    if (this.co_guest) {
-      return this.co_guest.split(",").length + 1;
-    } else {
-      return 1;
-    }
+  parseAllergy(value: string | null): string[] | null {
+    if (!value) return null;
+
+    const arr = value.toLowerCase().split(",");
+
+    if (arr.length === 1 && arr[0] === "nei") return null;
+
+    return arr.map((letter: string): string => {
+      return letter.trim();
+    });
+  }
+
+  parseVegeterian(value: string | null): boolean {
+    if (!value || value === "nei") return false;
+
+    return value.toLowerCase() === "ja" ? true : false;
+  }
+
+  parseCount(value: string | null): number {
+    if (!value) return 1;
+
+    return (
+      value.split(",").map((letter: string): string => {
+        return letter.trim();
+      }).length + 1
+    );
   }
 }

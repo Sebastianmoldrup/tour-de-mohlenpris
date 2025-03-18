@@ -26,11 +26,11 @@ export default function AddHosts() {
       reader.onload = (e) => {
         const csvData = e.target.result;
         const json = csvToJson(csvData);
-        console.log(json);
-        const hosts = json.map((obj) => {
-          return new Host(obj);
-        });
-        setHosts(hosts);
+        // console.log(json);
+        // const hosts = json.map((obj) => {
+        //   return new Host(obj);
+        // });
+        setHosts(json);
       };
       reader.readAsText(file);
     }
