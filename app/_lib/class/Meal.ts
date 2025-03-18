@@ -28,30 +28,41 @@ export class Meal {
     this.vegeterian = this.allergies.includes("vegetar");
   }
 
-  getHost(): Host {
-    return this.host;
-  }
-
   available(count: number): boolean {
     return this.seats - this.guests.length >= count;
   }
 
   setGuest(guest: Guest) {
-    return this.guests.push(guest);
+    // Add this guest to existing guests' met list
+    for (const existingGuest of this.guests) {
+      existingGuest.addMetGuest(guest);
+      guest.addMetGuest(existingGuest);
+    }
+
+    this.guests.push(guest);
+    guest.setVisited(this.host);
+    return this.host.setGuest(guest);
   }
 
-  hasVisited(name: string): boolean {
-    return this.guests.some((guest: Guest): boolean => {
-      return guest.visited.includes(name);
+  hasVisited(value: string): boolean {
+    return this.host.getGuests().some((guest: Guest): boolean => {
+      return guest.name === value;
     });
   }
 
-  getCount() {
-    return this.guests.reduce((count: number, guest: Guest): number => {
-      if (guest.co_guest) {
-        return count + guest.count + 1;
-      }
-      return count + 1;
-    }, 0);
-  }
+  // hasConflictingAllergy(guest: Guest): boolean {
+  //   // If guest has no allergies, there's no conflict
+  //   if (!guest.allergy || guest.allergy.length === 0) {
+  //     return false;
+  //   }
+  //
+  //   // Check if any of the guest's allergies match any of the meal's allergies
+  //   // Note: Skip "vegetar" as it's not an allergy but a dietary preference
+  //   return guest.allergy.some((allergy) =>
+  //     this.allergies.some(
+  //       (mealAllergy) =>
+  //         mealAllergy !== "vegetar" && mealAllergy === allergy.trim(),
+  //     ),
+  //   );
+  // }
 }

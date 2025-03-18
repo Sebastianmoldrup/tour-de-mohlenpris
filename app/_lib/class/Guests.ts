@@ -1,7 +1,5 @@
 import { Guest } from "@/app/_lib/class/Guest";
 import { GuestType } from "@/app/_lib/types";
-import { Meal } from "./Meal";
-import { Meals } from "./Meals";
 
 export class Guests {
   guests: Guest[];
@@ -12,25 +10,9 @@ export class Guests {
     });
   }
 
-  getVegGuests(): Guest[] | [] {
-    return (this.guests = this.guests.filter((guest: Guest): boolean => {
-      return guest.vegeterian;
-    }));
-  }
-
-  getAllergyGuests(): Guest[] | [] {
+  getPriorityGuests(): Guest[] | [] {
     return this.guests.filter((guest: Guest): boolean => {
-      return guest.allergy && guest.allergy.length > 0 ? true : false;
-    });
-  }
-
-  sortVegGuests(meals: Meals) {
-    this.getVegGuests().forEach((guest: Guest) => {
-      if (guest.hasVisited(guest.name)) {
-        return;
-      }
-
-      meals.getRandomMeal(meals.getVegMeals("appetizer")).setGuest(guest);
+      return guest.vegeterian || guest.isAllergic();
     });
   }
 }

@@ -9,6 +9,5 @@ export class Hosts {
     this.hosts = hosts.map((host: HostType) => {
       return new Host(host);
     });
-    console.log(this.hosts);
   }
 }

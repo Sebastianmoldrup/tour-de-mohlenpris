@@ -16,27 +16,20 @@ export class Guest {
     this.id = guest.id;
     this.name = guest.name;
     this.last_name = guest.last_name;
-    this.allergy =
-      guest.allergy && guest.allergy !== "nei"
-        ? guest.allergy
-            .toLowerCase()
-            .split(",")
-            .map((letter: string): string => {
-              return letter.trim();
-            })
-        : null;
-    this.vegeterian =
-      guest.vegeterian && guest.vegeterian.toLowerCase() === "ja"
-        ? true
-        : false;
+    this.allergy = this.parseAllergy(guest.allergy);
+    this.vegeterian = this.parseVegeterian(guest.vegeterian);
     this.co_guest = guest.co_guest;
-    this.count = !guest.co_guest
-      ? 1
-      : guest.co_guest.split(",").map((letter: string): string => {
-          return letter.trim();
-        }).length + 1;
+    this.count = this.parseCount(guest.co_guest);
     this.visited = [];
     this.metGuests = [];
+  }
+  // Add to Guest class
+  hasMet(guest: Guest): boolean {
+    return this.metGuests.some((metGuest) => metGuest.id === guest.id);
+  }
+
+  addMetGuest(guest: Guest): void {
+    this.metGuests.push(guest);
   }
 
   hasVisited(name: string): boolean {
@@ -53,13 +46,31 @@ export class Guest {
     this.visited.push(host);
   }
 
-  hasMet(guest: Guest) {
-    return this.metGuests?.some((met: Guest): boolean => {
-      return met.name === guest.name;
-    });
+  isAllergic(): boolean {
+    if (!this.allergy || (this.allergy && this.allergy.includes("nei"))) {
+      return false;
+    }
+
+    return true;
   }
 
-  setMet(guest: Guest) {
-    return this.metGuests.push(guest);
+  parseVegeterian(value: string | null): boolean {
+    if (!value) return false;
+    return value.toLowerCase().split(",").includes("ja");
+  }
+
+  parseAllergy(value: string | null): string[] | null {
+    if (!value) return null;
+    return value
+      .toLowerCase()
+      .split(",")
+      .map((letter: string): string => {
+        return letter.trim();
+      });
+  }
+
+  parseCount(value: string | null): number {
+    if (!value) return 1;
+    return value.split(",").length + 1;
   }
 }

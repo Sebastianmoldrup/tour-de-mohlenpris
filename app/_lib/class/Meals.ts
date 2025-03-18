@@ -16,47 +16,76 @@ export class Meals {
     });
   }
 
-  getVisited(value: string) {
+  getPriorityMeals(value: string): Meal[] {
     return this.meals.filter((meal: Meal): boolean => {
+      // Return meals that match the requested type (appetizer, dinner, dessert)
       return meal.name === value;
-    });
-  }
-
-  getVegMeals(value: Meal): Meal[] {
-    return this.meals.filter((meal: Meal): boolean => {
-      return meal.name === value.name;
-    });
-  }
-
-  getAllergyMeals(value: string): Meal[] {
-    return this.meals.filter((meal: Meal): boolean => {
-      return !meal.allergies.includes(value);
     });
   }
 
   getRandomMeal(value: Meal[], guest: Guest): Meal | null {
     if (value.length === 0) {
-      return null; // No meals available
+      console.log("No meals available");
+      return null;
     }
 
-    const randomIndex = Math.floor(Math.random() * value.length);
-    const randomMeal = value[randomIndex];
+    // Filter meals that match all criteria for this guest
+    const availableMeals = value.filter((meal: Meal): boolean => {
+      // Check if the meal has enough seats and the guest hasn't visited this host
+      if (!meal.available(guest.count) || meal.hasVisited(guest.name)) {
+        return false;
+      }
 
-    console.log(this.getVisited(value));
+      // Check vegetarian requirement
+      if (guest.vegeterian && !meal.vegeterian) {
+        return false;
+      }
 
-    // Check if the guest has already visited this host
-    if (guest.hasVisited(randomMeal.hostName)) {
-      // If so, try again with the remaining meals
-      return this.getRandomMeal(
-        value.filter((meal) => meal !== randomMeal), // Exclude the conflicting meal
-        guest,
+      // Check for allergy conflicts
+      if (guest.isAllergic() && guest.allergy) {
+        // Check if any of the guest's allergies conflict with meal allergies
+        // Skip "vegetar" as it's not an allergy but a dietary preference
+        for (const allergy of guest.allergy) {
+          if (
+            allergy !== "nei" &&
+            meal.allergies.some(
+              (mealAllergy) =>
+                mealAllergy !== "vegetar" && mealAllergy === allergy,
+            )
+          ) {
+            return false;
+          }
+        }
+      }
+
+      // Check if the guest would meet someone they've already met
+      const wouldMeetAgain = meal.guests.some(
+        (existingGuest) =>
+          guest.hasMet(existingGuest) || existingGuest.hasMet(guest),
       );
+
+      // Only consider this constraint if there are enough options
+      if (wouldMeetAgain && availableMeals.length > 1) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (availableMeals.length === 0) {
+      console.log(
+        `No suitable ${value[0]?.name || "meals"} available for ${guest.name}`,
+      );
+      return null;
     }
 
-    // Assign the guest to the meal and mark the host as visited
-    randomMeal.setGuest(guest);
-    guest.setVisited(randomMeal.getHost());
+    // Select a random meal from available options
+    const randomIndex = Math.floor(Math.random() * availableMeals.length);
+    const selectedMeal = availableMeals[randomIndex];
 
-    return randomMeal; // Return the assigned meal
+    // Mark the meal as assigned to this guest
+    selectedMeal.setGuest(guest);
+
+    return selectedMeal;
   }
 }
