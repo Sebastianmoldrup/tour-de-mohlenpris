@@ -14,4 +14,23 @@ export class Meals {
       });
     });
   }
+
+  getVegetarianMeals() {
+    this.meals = this.meals.filter((meal: Meal): boolean => {
+      return meal.isVegetarian();
+    });
+  }
+
+  getMealsWithAllergies(allergies: string[]): Meal[] {
+    return this.meals.filter((meal: Meal) => {
+      return allergies.some((allergy: string) => {
+        return meal.allergies.includes(allergy);
+      });
+    });
+  }
+
+  getRandomMeal(meals: Meal[]): Meal | null {
+    if (meals.length === 0) return null;
+    return meals[Math.floor(Math.random() * meals.length)];
+  }
 }

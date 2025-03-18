@@ -16,15 +16,29 @@ export class Meal {
     this.name = name;
     this.seats = host.seats;
     this.guests = [];
+    this.allergies = this.parseAllergy();
+    this.vegeterian = this.parseVegeterian();
+  }
 
-    // const mealAllergyKey = `${name}_allergy` as keyof Host;
-    this.allergies =
-      (host[`${name}_allergy` as keyof Host] as string)
-        ?.split(",")
-        .map((letter: string): string => {
-          return letter.trim();
-        }) || [];
+  addGuest(guest: Guest) {
+    return this.guests.push(guest);
+  }
 
-    this.vegeterian = this.allergies.includes("vegetar");
+  isVegetarian() {
+    return this.vegeterian;
+  }
+
+  parseAllergy() {
+    return (this.host[`${this.name}_allergy` as keyof Host] as string)
+      ?.split(",")
+      .map((letter: string) => {
+        return letter.trim();
+      });
+  }
+
+  parseVegeterian() {
+    if (!this.allergies) return false;
+
+    return this.allergies.includes("vegetar");
   }
 }

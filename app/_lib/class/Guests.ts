@@ -10,11 +10,9 @@ export class Guests {
     });
   }
 
-  getGuests(value: string): Guest[] {
-    console.log("val", value);
+  getVegetarianGuests() {
     return this.guests.filter((guest: Guest) => {
-      console.log("guest", guest);
-      return guest.name === value;
+      return guest.isVegetarian();
     });
   }
 }

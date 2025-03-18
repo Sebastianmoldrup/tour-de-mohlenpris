@@ -23,6 +23,10 @@ export class Guest {
     this.count = this.parseCount(guest.co_guest);
   }
 
+  isVegetarian(): boolean {
+    return this.vegeterian;
+  }
+
   parseAllergy(value: string | null): string[] | null {
     if (!value) return null;
 
