@@ -27,6 +27,10 @@ export class Guest {
     return this.vegeterian;
   }
 
+  addVisited(host: Host) {
+    return this.visited.push(host);
+  }
+
   parseAllergy(value: string | null): string[] | null {
     if (!value) return null;
 

@@ -29,8 +29,7 @@ export class Meals {
     });
   }
 
-  getRandomMeal(meals: Meal[]): Meal | null {
-    if (meals.length === 0) return null;
-    return meals[Math.floor(Math.random() * meals.length)];
+  getRandomMeal(mealsArray: Meal[]): Meal {
+    return mealsArray[Math.floor(Math.random() * mealsArray.length)];
   }
 }

@@ -13,17 +13,23 @@ export class Sort {
     this.hosts = new Hosts(hosts);
     this.guests = new Guests(guests);
     this.meals = new Meals(hosts);
-    console.log(this.meals);
+    // console.log(this.meals);
   }
 
   sortVegeterian() {
-    const meals = this.meals.getVegetarianMeals();
-    const guests = this.guests.getVegetarianGuests();
-    console.log(meals);
-    console.log(guests);
+    const vegMeals = this.meals.getVegetarianMeals();
+    const vegGuests = this.guests.getVegetarianGuests();
 
-    guests.forEach((guest: Guest) => {
-      this.meals.getRandomMeal(meals).addGuest(guest);
-    });
+    // Check if vegMeals is properly returning an array
+    if (vegMeals && vegMeals.length > 0) {
+      vegGuests.forEach((guest: Guest) => {
+        // Make sure we're passing the array to getRandomMeal
+        const randomMeal = this.meals.getRandomMeal(vegMeals);
+        // Check if randomMeal is actually a Meal object
+        if (randomMeal) {
+          randomMeal.addGuest(guest);
+        }
+      });
+    }
   }
 }
