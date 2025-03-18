@@ -1,5 +1,5 @@
 import { GuestType } from "@/app/_lib/types";
-import { Host } from "@/app/_lib/class/Host";
+import { Meal } from "@/app/_lib/class/Meal";
 
 export class Guest {
   id: number;
@@ -9,14 +9,12 @@ export class Guest {
   vegeterian: boolean;
   co_guest: string | null;
   count: number;
-  visited: Host[];
-  metGuests: Guest[];
+  visited: Meal[];
   constructor(guest: GuestType) {
     this.id = guest.id;
     this.name = guest.name;
     this.last_name = guest.last_name;
     this.visited = [];
-    this.metGuests = [];
     this.allergy = this.parseAllergy(guest.allergy);
     this.vegeterian = this.parseVegeterian(guest.vegeterian);
     this.co_guest = guest.co_guest;
@@ -27,8 +25,15 @@ export class Guest {
     return this.vegeterian;
   }
 
-  addVisited(host: Host) {
-    return this.visited.push(host);
+  isAllergic(): boolean {
+    if (!this.allergy) return false;
+    return true;
+  }
+
+  hasVisited(name: string): boolean {
+    return this.visited.some((meal: Meal): boolean => {
+      return meal.name === name;
+    });
   }
 
   parseAllergy(value: string | null): string[] | null {

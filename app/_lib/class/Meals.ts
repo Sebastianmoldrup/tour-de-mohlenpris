@@ -1,5 +1,6 @@
 import { Host } from "@/app/_lib/class/Host";
 import { Meal } from "@/app/_lib/class/Meal";
+import { Guest } from "./Guest";
 
 export class Meals {
   meals: Meal[];
@@ -15,21 +16,32 @@ export class Meals {
     });
   }
 
-  getVegetarianMeals() {
-    this.meals = this.meals.filter((meal: Meal): boolean => {
-      return meal.isVegetarian();
-    });
+  getPriority(): Meal[] {
+    const vegeterian = this.meals.filter((meal: Meal) => meal.isVegetarian());
+    const allergic = this.meals.filter(
+      (meal: Meal) => meal.allergies && meal.allergies.length > 0,
+    );
+
+    return [...new Set(vegeterian.concat(allergic))];
   }
 
-  getMealsWithAllergies(allergies: string[]): Meal[] {
-    return this.meals.filter((meal: Meal) => {
-      return allergies.some((allergy: string) => {
-        return meal.allergies.includes(allergy);
-      });
-    });
-  }
+  getAvailableMeals(
+    vegeterian: boolean,
+    allergic: boolean,
+    guest: Guest,
+  ): Meal[] {
+    const vegeterianMeals = this.meals.filter((meal: Meal) =>
+      meal.isVegetarian(),
+    );
+    const allergicMeals = this.meals.filter((meal: Meal) =>
+      meal.conflictingAllergies(guest.allergy),
+    );
+    const concat = vegeterianMeals.concat(allergicMeals);
 
-  getRandomMeal(mealsArray: Meal[]): Meal {
-    return mealsArray[Math.floor(Math.random() * mealsArray.length)];
+    concat.filter((meal: Meal) => {
+      return;
+    });
+
+    return [];
   }
 }

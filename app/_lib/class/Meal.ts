@@ -20,12 +20,15 @@ export class Meal {
     this.vegeterian = this.parseVegeterian();
   }
 
-  addGuest(guest: Guest) {
-    return this.guests.push(guest);
-  }
-
   isVegetarian() {
     return this.vegeterian;
+  }
+
+  conflictingAllergies(guestAllergies: string[] | null): boolean {
+    if (!this.allergies) return false;
+    return this.allergies?.some((allergy: string): boolean => {
+      return guestAllergies.includes(allergy);
+    });
   }
 
   parseAllergy() {

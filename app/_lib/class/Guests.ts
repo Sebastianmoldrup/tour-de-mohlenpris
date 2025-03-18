@@ -10,9 +10,10 @@ export class Guests {
     });
   }
 
-  getVegetarianGuests() {
-    return this.guests.filter((guest: Guest) => {
-      return guest.isVegetarian();
-    });
+  getPriority(): Guest[] {
+    const vegeterians = this.guests.filter((guest) => guest.isVegetarian());
+    const allergic = this.guests.filter((guest) => guest.isAllergic());
+
+    return [...new Set(vegeterians.concat(allergic))];
   }
 }
