@@ -1,35 +1,51 @@
+import { Meals } from "@/app/_lib/class/Meals";
+import { Guest } from "@/app/_lib/class/Guest";
+import { Meal } from "./Meal";
+
 interface HostType {
-  appetizer: string;
-  appetizer_allergy: string | null;
-  dinner: string;
-  dinner_allergy: string | null;
-  dessert: string;
-  dessert_allergy: string | null;
-  id: number;
   name: string;
   seats: number;
 }
 
 export class Host {
-  id: number;
-  name: string;
-  seats: number;
-  appetizer: string;
-  appetizer_allergy: string | null;
-  dinner: string;
-  dinner_allergy: string | null;
-  dessert: string;
-  dessert_allergy: string | null;
+  name: string = "";
+  seats: number = 0;
+  #meals: Meals;
 
   constructor(host: HostType) {
-    this.id = host.id;
     this.name = host.name;
     this.seats = host.seats;
-    this.appetizer = host.appetizer;
-    this.appetizer_allergy = host.appetizer_allergy;
-    this.dinner = host.dinner;
-    this.dinner_allergy = host.dinner_allergy;
-    this.dessert = host.dessert;
-    this.dessert_allergy = host.dessert_allergy;
+    this.#meals = new Meals(this, host);
+  }
+
+  addGuest(guest: Guest): boolean {
+    if (this.guests.length < this.seats) return false;
+
+    this.guests.push(guest);
+    return true;
+  }
+
+  get guests(): Guest[] {
+    return this.#meals.flatMap((meal) => meal.guest);
+  }
+
+  get meals() {
+    return this.#meals.meals;
+  }
+
+  get appetizer(): Meal {
+    return this.#meals.appetizer;
+  }
+
+  get dinner(): Meal {
+    return this.#meals.dinner;
+  }
+
+  get dessert(): Meal {
+    return this.#meals.dessert;
+  }
+
+  get allergies() {
+    return new Set(this.#meals.flatMap((meal) => meal.allergies));
   }
 }

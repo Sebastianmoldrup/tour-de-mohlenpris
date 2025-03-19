@@ -2,13 +2,15 @@ import { Host } from "@/app/_lib/class/Host";
 import { HostType } from "@/app/_lib/types";
 
 export class Hosts {
-  hosts: Host[];
+  #hosts: Host[] = [];
 
   constructor(hosts: HostType[]) {
-    // console.log(hosts);
-    this.hosts = hosts.map((host: HostType) => {
-      return new Host(host);
+    hosts.forEach((host: HostType) => {
+      this.#hosts.push(new Host(host));
     });
-    console.log(this.hosts);
+  }
+
+  get hosts(): Host[] {
+    return this.#hosts;
   }
 }
