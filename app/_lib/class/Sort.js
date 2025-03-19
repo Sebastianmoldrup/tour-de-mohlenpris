@@ -98,6 +98,22 @@ export class Sort {
     return m;
   }
 
+  getGuests() {
+    return this.guests.guests.map((guest) => {
+      console.log(guest);
+      return {
+        name: guest.name,
+        coguest: guest.coguests.join(", "),
+        appetizer: guest.meals[0].name,
+        appetizer_host: guest.meals[0].host.name,
+        dinner: guest.meals[1].name,
+        dinner_host: guest.meals[1].host.name,
+        dessert: guest.meals[2].name,
+        dessert_host: guest.meals[2].host.name,
+      };
+    });
+  }
+
   print() {
     return this.guests.guests.forEach((guest) => {
       console.log(
