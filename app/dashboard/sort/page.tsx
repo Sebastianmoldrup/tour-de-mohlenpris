@@ -12,7 +12,8 @@ export default function MealSchedule() {
   }
 
   const sort = new Sort(hosts, guests);
-  sort.sortPriority();
+  sort.print();
+
   // sort.asssignGuestsToHosts();
   // new Sort(hosts, guests);
 

@@ -13,10 +13,7 @@ export default function AddHosts() {
       skipEmptyLines: true,
       dynamicTyping: true, // Converts numbers automatically
       transformHeader: (header) => header.toLowerCase(),
-    }).data.map((row, index) => ({
-      ...row,
-      id: index + 1, // Assign incremental ID
-    }));
+    });
   };
 
   const handleFileUpload = (event) => {
@@ -30,7 +27,8 @@ export default function AddHosts() {
         // const hosts = json.map((obj) => {
         //   return new Host(obj);
         // });
-        setHosts(json);
+        // console.log(json);
+        setHosts(json.data);
       };
       reader.readAsText(file);
     }

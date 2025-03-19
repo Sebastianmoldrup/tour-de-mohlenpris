@@ -13,10 +13,7 @@ export default function AddGuests() {
       skipEmptyLines: true,
       dynamicTyping: true, // Converts numbers automatically
       transformHeader: (header) => header.toLowerCase(),
-    }).data.map((row, index) => ({
-      ...row,
-      id: index + 1, // Assign incremental ID
-    }));
+    });
   };
 
   const handleFileUpload = (event) => {
@@ -29,7 +26,8 @@ export default function AddGuests() {
         // const guests = json.map((obj) => {
         //   return new Guest(obj);
         // });
-        setGuests(json);
+        // console.log(json);
+        setGuests(json.data);
       };
       reader.readAsText(file);
     }
