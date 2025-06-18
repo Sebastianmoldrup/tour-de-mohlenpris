@@ -2,6 +2,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { signIn } from "@/app/auth/signin/actions/signIn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,8 @@ const formSchema = z.object({
 });
 
 export function SignInForm() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,6 +42,13 @@ export function SignInForm() {
 
     const { success, error } = await signIn(values);
     console.log("Sign in result:", { success, error });
+
+    if (error) {
+      console.error("Sign in failed:", error);
+    }
+
+    router.refresh();
+
   }
 
   return (
