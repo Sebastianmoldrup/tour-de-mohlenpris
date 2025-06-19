@@ -36,25 +36,30 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  // console.log("Request URL:", request.nextUrl.pathname);
 
   // Store URL and Routes
   const url = request.nextUrl.clone();
   const protectedRoutes = ["/admin"];
-  const authRoutes = ["/auth"];
   const publicRoutes = ["/auth/signin"];
 
-  // 1. Redirect to the home page if the user is logged in and tries to access a protected route
-  // 2. Redirect to the signin page if the user is not logged in and tries to access a protected route
-  // 3. Redirect to the signin page if the user is not logged in and accesses a non-existing route
-  if (user && authRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
+  if (
+    !user &&
+    protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+  ) {
+    // If user is not logged in and trying to access a protected route, redirect to signin
+    url.pathname = "/auth/signin";
+    return NextResponse.redirect(url);
+  } else if (
+    !user &&
+    request.nextUrl.pathname !== "/" &&
+    !publicRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+  ) {
+    // If user is not logged in and trying to access a non-public, non-home route, redirect to home
     url.pathname = "/";
     return NextResponse.redirect(url);
-  } else if (!user && protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
-    url.pathname = "/auth/signin";
-    return NextResponse.redirect(url);
-  } else if (!user && !publicRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
-    url.pathname = "/auth/signin";
+  } else if (user && request.nextUrl.pathname === "/auth/signin") {
+    // If user is logged in and trying to access the signin page, redirect to dashboard
+    url.pathname = "/admin/dashboard";
     return NextResponse.redirect(url);
   }
 

@@ -15,20 +15,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+// Zod Schema for form validation
 const formSchema = z.object({
   email: z.string().email({ message: "Ugyldig e-postadresse" }),
   password: z
     .string()
-    // .regex(/^[a-zA-Z0-9_]+$/, {
-    //   message: "Passord kan bare inneholde bokstaver og tall",
-    // })
     .min(4, { message: "Brukernavn må være minst 4 bokstaver" })
     .max(50, { message: "Brukernavn kan ikke være lengre en 50 bokstaver" }),
 });
 
 export function SignInForm() {
+  // Next router initialized
   const router = useRouter();
 
+  // Form hook initialized with Zod schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,26 +37,25 @@ export function SignInForm() {
     },
   });
 
+  // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Form submitted with values:", values);
-
+    // Run sign-in server action with form values
     const { success, error } = await signIn(values);
-    console.log("Sign in result:", { success, error });
 
     if (error) {
+      // Check for error and log the error
       console.error("Sign in failed:", error);
     }
 
-    router.refresh();
-
+    if (success) {
+      // Refresh page on sign in, middleware redirects to home
+      router.refresh();
+    }
   }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 w-full"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
         <FormField
           control={form.control}
           name="email"
@@ -88,4 +87,3 @@ export function SignInForm() {
     </Form>
   );
 }
-
