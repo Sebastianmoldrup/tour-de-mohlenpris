@@ -40,20 +40,24 @@ export default function Navbar() {
 
   return (
     <nav className="flex justify-between px-4 py-2 bg-gray-800 text-white">
-      <h1>Tour De Møhlenpris</h1>
+      <h1>
+        <Link href="/">Tour De Møhlenpris</Link>
+      </h1>
       <ul className="flex space-x-4">
-        <li>
-          <Link href="/">Home</Link>
-        </li>
         {!session && (
           <li>
             <Link href="/auth/signin">Login</Link>
           </li>
         )}
         {session && (
-          <li>
-            <button onClick={signOut}>Logout</button>
-          </li>
+          <>
+            <li>
+              <Link href="/admin/dashboard">Dashboard</Link>
+            </li>
+            <li>
+              <button onClick={signOut}>Logout</button>
+            </li>
+          </>
         )}
       </ul>
     </nav>
