@@ -3,14 +3,14 @@ import { google, sheets_v4 } from "googleapis";
 // Import JWT type for Google authentication
 import { JWT } from "google-auth-library";
 // Import types
-import { SheetRow } from "@/types";
+import { GuestData, HostData } from "@/types";
 
 // Import formatting for google sheets data
 import { formatSheet } from "@/utils/googlesheets/formatSheetData";
 
 export const getSheetsData = async (): Promise<{
-  hosts: SheetRow[];
-  guests: SheetRow[];
+  hostsData: HostData[];
+  guestsData: GuestData[];
 }> => {
   // Set up Google authentication with credentials and read-only scope
   const auth = new google.auth.GoogleAuth({
@@ -40,17 +40,17 @@ export const getSheetsData = async (): Promise<{
       sheets.spreadsheets.values.get({ spreadsheetId, range: "deltakere!A:Z" }),
     ]);
 
-    const hostData = formatSheet(hostsResponse.data.values || []);
-    const guestData = formatSheet(guestsResponse.data.values || []);
+    const hostData = formatSheet<HostData>(hostsResponse.data.values || []);
+    const guestData = formatSheet<GuestData>(guestsResponse.data.values || []);
 
     // Return the values or empty arrays if no data
     return {
-      hosts: hostData,
-      guests: guestData,
+      hostsData: hostData,
+      guestsData: guestData,
     };
   } catch (error) {
     // Log error and return empty data on failure
     console.error("Error fetching sheet data:", error);
-    return { hosts: [], guests: [] };
+    return { hostsData: [], guestsData: [] };
   }
 };

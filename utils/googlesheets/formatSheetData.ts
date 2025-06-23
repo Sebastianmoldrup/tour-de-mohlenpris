@@ -1,26 +1,19 @@
-import { SheetRow } from "@/types";
-
-export const formatSheet = (data: string[][]): SheetRow[] => {
-  // If data is empty, return an empty array
+export const formatSheet = <T>(data: string[][]): T[] => {
   if (!data.length) return [];
 
-  // Destructure and get the first row as headers, and the rest as rows
   const [headersRaw, ...rows] = data;
-
-  // Map over headers to format them
   const headers = headersRaw.map((h) =>
-    h.trim().toLowerCase().replace(/\s+/g, "_"),
+    h.trim().toLowerCase().replace(/\s+/g, "_")
   );
 
-  // Map over rows to create an array of objects with formatted headers and values
   return rows.map((row) => {
-    const obj: SheetRow = {};
+    const obj: Record<string, any> = {};
     headers.forEach((header, index) => {
       const formattedHeader = formatHeader(header);
       const formattedValue = formatValue(row[index]);
       obj[formattedHeader] = formattedValue ?? "";
     });
-    return obj;
+    return obj as T;
   });
 };
 
