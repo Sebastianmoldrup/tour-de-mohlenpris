@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { HostData, GuestData } from '@/types';
 import { MealAssignment } from "@/app/admin/dashboard/classes/MealAssignment";
 import { Guest } from "@/app/admin/dashboard/classes/Guest";
-import { Meal } from "@/app/admin/dashboard/classes/Meal";
+// import { Meal } from "@/app/admin/dashboard/classes/Meal";
 
 export default function MobileOverview({ hostsData, guestsData }: { hostsData: HostData[], guestsData: GuestData[] }) {
   // console.log("Hosts Data:", hostsData);
