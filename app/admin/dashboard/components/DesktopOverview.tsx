@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 
 export default function DesktopOverview({ hostsData, guestsData }: { hostsData: HostData[], guestsData: GuestData[] }) {
@@ -58,10 +59,10 @@ export default function DesktopOverview({ hostsData, guestsData }: { hostsData: 
       <div className="flex items-center justify-center my-6">
         <Link
           href="/admin/dashboard/print"
-          className="bg-green-200 py-2 px-4 rounded-md"
+          className=""
           onClick={handlePrintClick}
         >
-          Utskrift
+          <Button>Utskrift</Button>
         </Link>
       </div>
       <Table>
@@ -78,33 +79,24 @@ export default function DesktopOverview({ hostsData, guestsData }: { hostsData: 
         </TableHeader>
         <TableBody>
           {guests.map((guest: Guest, index: number) => {
-            const { name, coguest, allergies, vegeterian, meals } = guest;
             return (
               <TableRow key={index}>
-                <TableCell className="capitalize font-medium">{name}</TableCell>
+                <TableCell className="capitalize font-medium">{guest.name}</TableCell>
                 <TableCell className="capitalize">
-                  {coguest.join(", ")}
+                  {guest.coguest.join(", ")}
                 </TableCell>
                 <TableCell className="text-red-500">
-                  {allergies.join(", ")}
+                  {guest.allergies.join(", ")}
                 </TableCell>
-                <TableCell>{vegeterian ? "ja" : null}</TableCell>
-                {meals.map((meal: Meal, index: number) => {
-                  const {
-                    // type,
-                    host,
-                    name,
-                    // capacity,
-                    allergies,
-                    // guests,
-                    // guestCount,
-                  } = meal;
+                <TableCell>{guest.vegeterian ? "ja" : null}</TableCell>
+                {guest.meals.map((meal: Meal, index: number) => {
+
                   return (
                     <TableCell key={index} className="capitalize space-y-2">
-                      <div>{name}</div>
-                      <div className='px-2 py-1 bg-gray-200 rounded-md w-fit'>{host.name}</div>
+                      <div>{meal.name}</div>
+                      <div className='px-2 py-1 bg-gray-200 rounded-md w-fit'>{meal.host.name}</div>
                       <div className="text-red-500">
-                        Allergener: {allergies.join(", ")}
+                        Allergener: {meal.allergies.join(", ")}
                       </div>
                     </TableCell>
                   );
