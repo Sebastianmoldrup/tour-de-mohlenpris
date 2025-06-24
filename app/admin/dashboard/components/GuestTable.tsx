@@ -40,7 +40,7 @@ export default function GuestTable({
   // States for managing guests, meals, and update triggers
   const [guests, setGuests] = useState<Guest[]>([]);
   const [allMeals, setAllMeals] = useState<Meal[]>([]);
-  const [updateTrigger, setUpdateTrigger] = useState(0);
+  const [_, setUpdateTrigger] = useState(0);
 
   // On component mount, initialize MealAssignment and set guests and meals with instance data
   useEffect(() => {
