@@ -42,11 +42,16 @@ export async function updateSession(request: NextRequest) {
   const protectedRoutes = ["/admin"];
   const publicRoutes = ["/auth/signin"];
 
+  /*
+   *  Middleware redirect checks:
+   *    - if user is not logged in and trying to access a protected route, redirect to signin
+   *    - if user is not logged in and trying to access a non-public, non-home route, redirect to home
+   *    - if user is logged in and trying to access the signin page, redirect to dashboard
+   * */
   if (
     !user &&
     protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
   ) {
-    // If user is not logged in and trying to access a protected route, redirect to signin
     url.pathname = "/auth/signin";
     return NextResponse.redirect(url);
   } else if (
@@ -54,11 +59,9 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname !== "/" &&
     !publicRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
   ) {
-    // If user is not logged in and trying to access a non-public, non-home route, redirect to home
     url.pathname = "/";
     return NextResponse.redirect(url);
   } else if (user && request.nextUrl.pathname === "/auth/signin") {
-    // If user is logged in and trying to access the signin page, redirect to dashboard
     url.pathname = "/admin/dashboard";
     return NextResponse.redirect(url);
   }

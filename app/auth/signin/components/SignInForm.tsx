@@ -1,9 +1,15 @@
 "use client";
+
+// Zod and React Hook Form imports
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+
+// NextJS imports
 import { useRouter } from "next/navigation";
 import { signIn } from "@/app/auth/signin/actions/signIn";
+
+// Shadcn/UI imports
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,7 +31,7 @@ const formSchema = z.object({
 });
 
 export function SignInForm() {
-  // Next router initialized
+  // Initialize NextJS router for navigation
   const router = useRouter();
 
   // Form hook initialized with Zod schema
@@ -39,16 +45,16 @@ export function SignInForm() {
 
   // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Run sign-in server action with form values
+    // Call signIn action with form values
     const { success, error } = await signIn(values);
 
+    // error handling
     if (error) {
-      // Check for error and log the error
       console.error("Sign in failed:", error);
     }
 
+    // redirect or refresh page on successful sign in (refresh makes middleware redirect)
     if (success) {
-      // Refresh page on sign in, middleware redirects to home
       router.refresh();
     }
   }

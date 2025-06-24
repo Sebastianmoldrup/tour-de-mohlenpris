@@ -28,7 +28,6 @@ export class MealAssignment {
    *  - 6. Finally return the list of guests with their assigned meals
    * */
   sortGuests() {
-    console.time("Sorting guests");
     this.guests.list.forEach((guest) => {
       // console.log(guest.name);
       this.mealTypes.forEach((type) => {
@@ -72,30 +71,12 @@ export class MealAssignment {
         }
       });
     });
-    console.timeEnd("Sorting guests");
-    console.log(this.guests.list);
 
     return this.guests.list;
-  }
-
-  getHosts() {
-    return this.hosts.list;
   }
 
   getMeals() {
     return this.meals.list;
   }
 
-  getAvailableHosts() {
-    return this.meals.list.filter((meal) => {
-      // console.log(`${meal.guestCount} ${meal.capacity}`);
-      return meal.guestCount < Number(meal.capacity);
-    });
-  }
-
-  getUnAssignedGuests() {
-    return this.guests.list.filter((guest) => {
-      return guest.meals.length !== 3;
-    });
-  }
 }

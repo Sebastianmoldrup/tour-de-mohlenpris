@@ -3,6 +3,7 @@
  *  @Params: guest - Object from the Google Sheets api
  *  @Constructor: name, allergies, coguest, vegetarian, count (total count of guest + coguests), meals (array of meal classes assigned)
  *  @Methods:
+ *    - UpdateMeal - updates the meal for the guest and the meal's guests
  *    - hasMetGuest - checks if the guest has met another guest
  *    - addMeal - adds a meal to the guest's meals
  *    - GetAllMealGuests - returns all guests from all meals the guest has attended
@@ -29,19 +30,23 @@ export class Guest {
   }
 
   updateMeal(oldMeal, newMeal) {
-    // Remove guest from the old meal's guest list
-    oldMeal.guests = oldMeal.guests.filter((g) => g !== this);
-    oldMeal.guestCount -= this.count;
+    // 1. validate that we can make this chnage
+    if (!oldMeal || !newMeal) {
+      console.error("Invalid meals provided");
+      return false;
+    }
 
-    // Remove the old meal from the guest
-    this.meals = this.meals.filter((m) => m !== oldMeal);
+    oldMeal.guests = oldMeal.guests.filter((guest) => {
+      return guest !== this;
+    });
 
-    // Add the new meal to the guest
-    this.meals.push(newMeal);
-
-    // Add the guest to the new meal
     newMeal.guests.push(this);
-    newMeal.guestCount += this.count;
+
+    this.meals = this.meals.map((meal) => {
+      return meal === oldMeal ? newMeal : meal;
+    });
+
+    return true;
   }
 
   hasMetGuest(guest) {

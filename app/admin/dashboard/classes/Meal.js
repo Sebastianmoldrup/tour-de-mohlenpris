@@ -1,3 +1,15 @@
+/*
+ *  @Class: Meal
+ *  @Params: meal - Object from the Google Sheets api, host - Host class instance
+ *  @Constructor: type, host, name, capacity, allergies (array of allergies), guests (array of guest classes assigned), guestCount (total count of guests)
+ *  @Methods:
+ *    - hasCapacity - checks if the meal has capacity for a guest
+ *    - getGuestCount - returns the total count of guests in the meal
+ *    - hasGuestVisited - checks if a guest has visited the host before
+ *    - removeGuest - removes a guest from the meal
+ *    - addGuest - adds a guest to the meal
+ *    - assignGuest - assigns a guest to the meal and adds the meal to the guest's meals
+ * */
 export class Meal {
   constructor(meal, host) {
     this.type = meal.type;
@@ -14,18 +26,47 @@ export class Meal {
     this.guestCount = 0;
   }
 
-  // Method to check if a guest can be assigned to the meal based on capacity
   hasCapacity(guest) {
-    return this.guestCount + guest.count <= this.capacity;
+    return this.getGuestCount() + guest.count <= this.capacity;
   }
 
-  // Method to check all host meals guests to see if the guest has visited the host before
+  getGuestCount() {
+    return this.guests.reduce((count, guest) => {
+      return count + guest.count;
+    }, 0);
+  }
+
   hasGuestVisited(guest) {
     return !this.host.meals.some((meal) => {
       return meal.guests.some((g) => {
         return g === guest;
       });
     });
+  }
+
+  removeGuest(guest) {
+    const guestIndex = this.guests.findIndex(
+      (g) => g === guest || g.id === guest.id,
+    );
+    if (guestIndex !== -1) {
+      this.guests = [
+        ...this.guests.slice(0, guestIndex),
+        ...this.guests.slice(guestIndex + 1),
+      ];
+      this.guestCount -= guest.count;
+      return true;
+    }
+    return false;
+  }
+
+  addGuest(guest) {
+    if (this.guests.includes(guest)) {
+      return false;
+    }
+
+    this.guests = [...this.guests, guest];
+    this.guestCount += guest.count;
+    return true;
   }
 
   // Method to assign a guest to the meal

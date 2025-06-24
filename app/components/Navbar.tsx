@@ -1,18 +1,29 @@
 "use client";
 
+// NextJS imports
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+// Supabase client import
 import { createClient } from "@/utils/supabase/client/browserClient";
+
+// Supabase types import
 import type { Session } from "@supabase/supabase-js";
+
+// React imports
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  // State to hold the session
+  // React state to manage the session
   const [session, setSession] = useState<Session | null>(null);
-  // Initialize Supabase client and Next router
+
+  // Initialize Supabase client
   const supabase = createClient();
+
+  // Initialize NextJS router for navigation
   const router = useRouter();
 
+  // On component mount, check for existing session and set up auth state change listener
   useEffect(() => {
     // Initialize the session state when component mounts
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -30,14 +41,23 @@ export default function Navbar() {
     return () => {
       subscription.unsubscribe(); // Prevent memory leaks
     };
-  }, []); // Run once on component mount
+  }, []);
 
+  // Sign out function to handle user logout
   const signOut = async () => {
+    // Call Supabase's signOut method
     const { error } = await supabase.auth.signOut();
+
+    // error handling
     if (error) console.error("Error signing out:", error);
+
+    // Successful sign out, redirect to home page
     router.push("/");
   };
 
+  /*
+   *  Render the navigation bar with links to home always, and conditionally render login or dashboard/logout links based on session state
+   * */
   return (
     <nav className="flex justify-between px-4 py-2 bg-gray-800 text-white print:hidden">
       <h1>

@@ -1,9 +1,16 @@
 "use client";
+
+// React imports
 import { useEffect, useState } from "react";
+
+// Type import
 import { PrintMeal, PrintGuest } from "@/types";
 
 export default function PrintPage() {
+  // React state to hold print data array of guest objects
   const [printData, setPrintData] = useState([]);
+
+  // On component mount, retrieve print data from localStorage & set it to state
   useEffect(() => {
     const data = localStorage.getItem('printData');
     if (data) {
@@ -11,7 +18,10 @@ export default function PrintPage() {
     }
   }, []);
 
-  // console.log(printData);
+  /*
+   *  Iterate over the printData array and render each guest's invitation with their information
+   * */
+
   return <main className="flex flex-col items-center p-10">
     <button
       onClick={() => window.print()}

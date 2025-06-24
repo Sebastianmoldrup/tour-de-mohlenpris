@@ -8,6 +8,7 @@ import { GuestData, HostData } from "@/types";
 // Import formatting for google sheets data
 import { formatSheet } from "@/utils/googlesheets/formatSheetData";
 
+// Function to get data from Google Sheets
 export const getSheetsData = async (): Promise<{
   hostsData: HostData[];
   guestsData: GuestData[];
@@ -40,10 +41,11 @@ export const getSheetsData = async (): Promise<{
       sheets.spreadsheets.values.get({ spreadsheetId, range: "deltakere!A:Z" }),
     ]);
 
+    // Structure the data into HostData and GuestData using the formatSheet function
     const hostData = formatSheet<HostData>(hostsResponse.data.values || []);
     const guestData = formatSheet<GuestData>(guestsResponse.data.values || []);
 
-    // Return the values or empty arrays if no data
+    // Return the structured data
     return {
       hostsData: hostData,
       guestsData: guestData,

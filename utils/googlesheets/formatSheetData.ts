@@ -1,11 +1,18 @@
+// Function to format Google Sheets data into a structured array of objects
 export const formatSheet = <T>(data: string[][]): T[] => {
+  // Safety check: if data is empty, return an empty array
   if (!data.length) return [];
 
+  // Destructure the first row for headers and the rest for rows
   const [headersRaw, ...rows] = data;
+
+  // Format headers by trimming, converting to lowercase, and replacing spaces with underscores
   const headers = headersRaw.map((h) =>
     h.trim().toLowerCase().replace(/\s+/g, "_")
   );
 
+  // Return an array of objects where each object corresponds to a row
+  // Each object has keys from formatted headers and values from the row, formatted accordingly
   return rows.map((row) => {
     const obj: Record<string, any> = {};
     headers.forEach((header, index) => {
