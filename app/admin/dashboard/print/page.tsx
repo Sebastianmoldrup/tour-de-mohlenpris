@@ -30,9 +30,9 @@ export default function PrintPage() {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-1">
+          <h2 className="text-2xl font-semibold mb-1 capitalize">
             Kjære {guest.name}
-            {guest.coguest && ` og ${guest.coguest}`}
+            {guest.coguest && guest.coguest.length > 0 && `, ${guest.coguest}`}
           </h2>
           {guest.allergies && guest.allergies?.length > 0 && (
             <p className="text-sm text-gray-600">

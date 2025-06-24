@@ -73,6 +73,7 @@ export class MealAssignment {
       });
     });
     console.timeEnd("Sorting guests");
+    console.log(this.guests.list);
 
     return this.guests.list;
   }
