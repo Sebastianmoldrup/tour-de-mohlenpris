@@ -11,16 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from 'next/link';
 
 export default function DesktopOverview({ hostsData, guestsData }: { hostsData: HostData[], guestsData: GuestData[] }) {
-  // console.log("Hosts Data:", hostsData);
-  // console.log("Guests Data:", guestsData);
 
   // State to hold guests and meals
   const [guests, setGuests] = useState<Guest[]>([]);
-  // const [meals, setMeals] = useState<Meal[]>([]);
-  // const [availableHosts, setAvailableHosts] = useState<Meal[] | Meal>([]); // For the manual assignment UI
-  // const [unAssignedGuests, setUnAssignedGuests] = useState<Guest[] | Guest>([]); // For future use with UI to display the unassigned guests
 
   useEffect(() => {
     try {
@@ -29,22 +25,45 @@ export default function DesktopOverview({ hostsData, guestsData }: { hostsData: 
 
       // Set the state with the sorted guests and meals
       setGuests(ma.sortGuests());
-      // setMeals(ma.getMeals());
-      // setAvailableHosts(ma.getAvailableHosts());
-      // setUnAssignedGuests(ma.getUnAssignedGuests());
     } catch (error) {
       console.error("Parsing or MealAssignment failed:", error);
     }
   }, [hostsData, guestsData]);
 
-  // console.log("availableHosts: ", availableHosts);
-  // console.log("unAssignedGuests: ", unAssignedGuests);
-  // console.log("Guests:", guests);
-  // console.log("Meals:", meals);
+  const createPrintData = () => {
+    const printData = guests.map((guest: Guest) => {
+      return {
+        name: guest.name,
+        coguest: guest.coguest,
+        allergies: guest.allergies,
+        meals: guest.meals.map((meal: Meal) => {
+          return {
+            name: meal.name,
+            host: meal.host.name,
+            allergies: meal.allergies.join(", "),
+          }
+        })
+      }
+    })
+    // console.log(printData);
+    return JSON.stringify(printData);
+  }
+  const handlePrintClick = () => {
+    localStorage.removeItem('printData'); // Clear previous print data
+    localStorage.setItem('printData', createPrintData()); // Save new print data
+  };
 
-  // return <div className='hidden lg:block'>Desktop</div>
   return (
     <div className="hidden lg:block overscroll-x-scroll overflow-hidden my-6">
+      <div className="flex items-center justify-center my-6">
+        <Link
+          href="/admin/dashboard/print"
+          className="bg-green-200 py-2 px-4 rounded-md"
+          onClick={handlePrintClick}
+        >
+          Utskrift
+        </Link>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>

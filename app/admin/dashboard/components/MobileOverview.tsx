@@ -5,14 +5,9 @@ import { Guest } from "@/app/admin/dashboard/classes/Guest";
 // import { Meal } from "@/app/admin/dashboard/classes/Meal";
 
 export default function MobileOverview({ hostsData, guestsData }: { hostsData: HostData[], guestsData: GuestData[] }) {
-  // console.log("Hosts Data:", hostsData);
-  // console.log("Guests Data:", guestsData);
 
   // State to hold guests and meals
   const [guests, setGuests] = useState<Guest[]>([]);
-  // const [meals, setMeals] = useState<Meal[]>([]);
-  // const [availableHosts, setAvailableHosts] = useState<Meal[] | Meal>([]); // For the manual assignment UI
-  // const [unAssignedGuests, setUnAssignedGuests] = useState<Guest[] | Guest>([]); // For future use with UI to display the unassigned guests
 
   useEffect(() => {
     try {
@@ -21,18 +16,10 @@ export default function MobileOverview({ hostsData, guestsData }: { hostsData: H
 
       // Set the state with the sorted guests and meals
       setGuests(ma.sortGuests());
-      // setMeals(ma.getMeals());
-      // setAvailableHosts(ma.getAvailableHosts());
-      // setUnAssignedGuests(ma.getUnAssignedGuests());
     } catch (error) {
       console.error("Parsing or MealAssignment failed:", error);
     }
   }, [hostsData, guestsData]);
-
-  // console.log("availableHosts: ", availableHosts);
-  // console.log("unAssignedGuests: ", unAssignedGuests);
-  // console.log("Guests:", guests);
-  // console.log("Meals:", meals);
 
   return (
     <section

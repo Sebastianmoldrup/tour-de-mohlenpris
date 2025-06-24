@@ -20,3 +20,17 @@ export interface GuestData {
   allergies: string | string[];
   vegetarian: string;
 }
+
+// Print page data types
+export interface PrintMeal {
+  name: string;
+  host: string;
+  allergies?: string[] | string;
+}
+
+export interface PrintGuest {
+  name: string;
+  coguest?: string;
+  allergies?: string | string[];
+  meals: PrintMeal[];
+}

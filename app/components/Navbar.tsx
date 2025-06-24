@@ -39,7 +39,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between px-4 py-2 bg-gray-800 text-white">
+    <nav className="flex justify-between px-4 py-2 bg-gray-800 text-white print:hidden">
       <h1>
         <Link href="/">Tour De Møhlenpris</Link>
       </h1>
