@@ -7,10 +7,16 @@ import Link from 'next/link';
 // Types import
 import { HostData, GuestData } from "@/types";
 
+// Import from lucide-react
+import { Users } from 'lucide-react';
+
 // Class imports
 import { MealAssignment } from "@/app/admin/dashboard/classes/MealAssignment";
 import { Guest } from "@/app/admin/dashboard/classes/Guest";
 import { Meal } from "@/app/admin/dashboard/classes/Meal";
+
+// Skeleton component import
+import SkeletonGuestTable from "@/app/admin/dashboard/components/SkeletonGuestTable";
 
 // Shadcn/UI imports
 import { Button } from "@/components/ui/button";
@@ -41,6 +47,13 @@ export default function GuestTable({
   const [guests, setGuests] = useState<Guest[]>([]);
   const [allMeals, setAllMeals] = useState<Meal[]>([]);
   const [, setUpdateTrigger] = useState(0);
+
+  const mealTypes = ["appetizer", "dinner", "dessert"];
+  const mealTypeNames = {
+    "appetizer": "Forrett",
+    "dinner": "Middag",
+    "dessert": "Dessert"
+  }
 
   // On component mount, initialize MealAssignment and set guests and meals with instance data
   useEffect(() => {
@@ -81,7 +94,7 @@ export default function GuestTable({
 
   // Loading state: if guests are not available, show a loading message
   if (!guests || guests.length === 0) {
-    return <div>Laster data...</div>;
+    return <SkeletonGuestTable />;
   }
 
   /*
@@ -93,6 +106,7 @@ export default function GuestTable({
 
   return (
     <div className="lg:block overscroll-x-scroll overflow-hidden my-6">
+      {/* Buttons */}
       <div className="flex items-center justify-center my-6">
         <Link
           href="/admin/dashboard/print"
@@ -102,6 +116,36 @@ export default function GuestTable({
           <Button>Utskrift</Button>
         </Link>
       </div>
+
+      {/* Unassigned guests and available meals */}
+      <div className="grid md:grid-cols-2 gap-4 mx-auto my-16">
+        <div className="flex items-center justify-center">
+          <h2 className="text-2xl">Ikke tildelt:</h2>
+          <ul>
+            {guests.filter((guest) => {
+              return guest.meals.length < 3;
+            }).map((guest, index) => {
+              return <li key={index}>{`${guest.name}`}</li>
+            })}
+          </ul>
+        </div>
+        <div className="space-y-4">
+          <h2 className="text-2xl">Ledige måltider:</h2>
+          <ul className="space-y-4">
+            {allMeals.filter((meal) => {
+              return meal.getGuestCount() < meal.capacity;
+            }).map((meal, index) => {
+              return <li key={index} className="bg-green-200 px-2 py-1 rounded-md grid grid-cols-3">
+                <span className="font-medium">{meal.host.name}</span>
+                <span className="">{mealTypeNames[meal.type]}</span>
+                <span className="text-sm text-gray-600">Kapasitet {Number(meal.getGuestCount())} / {meal.capacity}</span>
+              </li>
+            })}
+          </ul>
+        </div>
+      </div>
+
+      {/* Table */}
       <Table>
         <TableHeader>
           <TableRow>
@@ -121,8 +165,11 @@ export default function GuestTable({
                 <TableCell className="sticky left-0 bg-white capitalize font-medium max-w-[150px] overflow-hidden">
                   {guest.name}
                 </TableCell>
-                <TableCell className="capitalize">
-                  {guest.coguest.join(", ")}
+                <TableCell className="p-0">
+                  <div className="flex items-center h-full gap-2 capitalize">
+                    <Users />
+                    {guest.coguest.length}
+                  </div>
                 </TableCell>
                 <TableCell className="text-red-500">
                   {guest.allergies.join(", ")}
@@ -135,7 +182,7 @@ export default function GuestTable({
                         title={meal.name}
                         className="w-[150px] overflow-hidden"
                       >
-                        {meal.host.name} - {meal.name}
+                        {meal.name}
                       </div>
                       <Select
                         // defaultValue={meal.host.name}
@@ -171,7 +218,7 @@ export default function GuestTable({
                             })}
                         </SelectContent>
                       </Select>
-                      <div className="text-stone-500 text-xs">
+                      <div className="text-red-500 text-xs">
                         Allergener: {guest.allergies.join(", ")}
                       </div>
                     </TableCell>

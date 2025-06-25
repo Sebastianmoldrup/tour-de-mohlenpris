@@ -41,7 +41,7 @@ function PreviewData({ title = "Tittel", data }: { title: string, data: HostData
       // Check if item has a surname property
       const surname = 'surname' in item ? item.surname ?? "" : "";
 
-      return <li key={index} className="bg-green-200 h-fit px-2 py-1 rounded-md">{`${index + 1}. ${surname ?? ""} ${item.name}`}</li>
+      return <li key={index} className="bg-gray-200 h-fit px-2 py-1 rounded-md">{`${index + 1}. ${surname ?? ""} ${item.name}`}</li>
     }))}</ul>
   </div>
 }
