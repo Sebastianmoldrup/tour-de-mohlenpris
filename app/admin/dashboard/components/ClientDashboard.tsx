@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { HostData, GuestData } from "@/types";
 
 // Import react state
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import GuestTable from "./GuestTable";
-import { Guest } from "../classes/Guest";
+// import { Guest } from "../classes/Guest";
 
 export default function ClientDashboard({ hostsData, guestsData }: { hostsData: HostData[]; guestsData: GuestData[] }) {
   // console.log("ClientDashboard hostsData:", hostsData);
