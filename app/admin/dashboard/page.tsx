@@ -5,7 +5,8 @@ import { getSheetsData } from "@/utils/googlesheets/getSheetData";
 import { HostData, GuestData } from "@/types";
 
 // Dashboard component imports
-import GuestTable from "@/app/admin/dashboard/components/GuestTable";
+// import GuestTable from "@/app/admin/dashboard/components/GuestTable";
+import ClientDashboard from "@/app/admin/dashboard/components/ClientDashboard";
 
 export default async function DashboardPage() {
   // Call the Server Action to get the data from Google Sheets formated
@@ -13,7 +14,8 @@ export default async function DashboardPage() {
 
   return (
     <main className="flex w-full justify-center items-center">
-      <GuestTable hostsData={hostsData} guestsData={guestsData} />
+      {/* <GuestTable hostsData={hostsData} guestsData={guestsData} /> */}
+      <ClientDashboard hostsData={hostsData} guestsData={guestsData} />
     </main>
   );
 }

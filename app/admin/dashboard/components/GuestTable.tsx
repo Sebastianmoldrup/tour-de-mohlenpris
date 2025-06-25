@@ -133,7 +133,7 @@ export default function GuestTable({
                     <TableCell key={index} className="capitalize space-y-2">
                       <div
                         title={meal.name}
-                        className="w-[200px] overflow-hidden"
+                        className="w-[150px] overflow-hidden"
                       >
                         {meal.host.name} - {meal.name}
                       </div>

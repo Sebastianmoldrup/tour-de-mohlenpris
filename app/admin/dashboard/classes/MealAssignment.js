@@ -66,7 +66,7 @@ export class MealAssignment {
 
         if (mealPool.length > 0) {
           const randomMeal =
-            mealPool[Math.floor(Math.random() * mealPool.length)];
+            mealPool[Math.floor(Math.random() * mealPool.length)]; // Using math.random to select a random meal index from the pool
           randomMeal.assignGuest(guest);
         }
       });

@@ -26,8 +26,8 @@ const formSchema = z.object({
   email: z.string().email({ message: "Ugyldig e-postadresse" }),
   password: z
     .string()
-    .min(4, { message: "Brukernavn må være minst 4 bokstaver" })
-    .max(50, { message: "Brukernavn kan ikke være lengre en 50 bokstaver" }),
+    .min(4, { message: "Passord må være minst 4 bokstaver" })
+    .max(25, { message: "Passord kan ikke være lengre en 50 bokstaver" }),
 });
 
 export function SignInForm() {
