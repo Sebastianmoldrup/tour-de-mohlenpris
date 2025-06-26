@@ -2,13 +2,13 @@
 
 // React imports
 import { useEffect, useState } from "react";
-import Link from 'next/link';
+import Link from "next/link";
 
 // Types import
 import { HostData, GuestData } from "@/types";
 
 // Import from lucide-react
-import { Users } from 'lucide-react';
+import { Users, Trash2 } from "lucide-react";
 
 // Class imports
 import { MealAssignment } from "@/app/admin/dashboard/classes/MealAssignment";
@@ -50,10 +50,11 @@ export default function GuestTable({
 
   const mealTypes = ["appetizer", "dinner", "dessert"];
   const mealTypeNames = {
-    "appetizer": "Forrett",
-    "dinner": "Middag",
-    "dessert": "Dessert"
-  }
+    appetizer: "Forrett",
+    dinner: "Middag",
+    dessert: "Dessert",
+  };
+  console.log("Guests", guests);
 
   // On component mount, initialize MealAssignment and set guests and meals with instance data
   useEffect(() => {
@@ -79,17 +80,17 @@ export default function GuestTable({
             name: meal.name,
             host: meal.host.name,
             allergies: meal.allergies.join(", "),
-          }
-        })
-      }
-    })
+          };
+        }),
+      };
+    });
     return JSON.stringify(printData);
-  }
+  };
 
   // Update localStorage with print data when the print button is clicked
   const handlePrintClick = () => {
-    localStorage.removeItem('printData'); // Clear previous print data
-    localStorage.setItem('printData', createPrintData()); // Save new print data
+    localStorage.removeItem("printData"); // Clear previous print data
+    localStorage.setItem("printData", createPrintData()); // Save new print data
   };
 
   // Loading state: if guests are not available, show a loading message
@@ -122,25 +123,41 @@ export default function GuestTable({
         <div className="flex items-center justify-center">
           <h2 className="text-2xl">Ikke tildelt:</h2>
           <ul>
-            {guests.filter((guest) => {
-              return guest.meals.length < 3;
-            }).map((guest, index) => {
-              return <li key={index}>{`${guest.name}`}</li>
-            })}
+            {guests
+              .filter((guest) => {
+                return guest.meals.length < 3;
+              })
+              .map((guest, index) => {
+                return <li key={index}>{`${guest.name}`}</li>;
+              })}
           </ul>
         </div>
         <div className="space-y-4">
           <h2 className="text-2xl">Ledige måltider:</h2>
           <ul className="space-y-4">
-            {allMeals.filter((meal) => {
-              return meal.getGuestCount() < meal.capacity;
-            }).map((meal, index) => {
-              return <li key={index} className="bg-green-200 px-2 py-1 rounded-md grid grid-cols-3">
-                <span className="font-medium">{meal.host.name}</span>
-                <span className="">{mealTypeNames[meal.type]}</span>
-                <span className="text-sm text-gray-600">Kapasitet {Number(meal.getGuestCount())} / {meal.capacity}</span>
-              </li>
-            })}
+            <li className="grid grid-cols-3 px-2">
+              <span className="border-b-2 pb-1 w-fit">Vert</span>
+              <span className="border-b-2 pb-1 w-fit">Rett</span>
+              <span className="border-b-2 pb-1 w-fit">Kapasitet</span>
+            </li>
+            {allMeals
+              .filter((meal) => {
+                return meal.getGuestCount() < meal.capacity;
+              })
+              .map((meal, index) => {
+                return (
+                  <li
+                    key={index}
+                    className="bg-green-200 px-2 py-1 rounded-md grid grid-cols-3"
+                  >
+                    <span className="font-medium">{meal.host.name}</span>
+                    <span className="">{mealTypeNames[meal.type]}</span>
+                    <span className="text-sm text-gray-600">
+                      Kapasitet {Number(meal.getGuestCount())} / {meal.capacity}
+                    </span>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </div>
@@ -180,9 +197,13 @@ export default function GuestTable({
                     <TableCell key={index} className="capitalize space-y-2">
                       <div
                         title={meal.name}
-                        className="w-[150px] overflow-hidden"
+                        className="w-[150px] overflow-hidden flex gap-2 items-center"
                       >
-                        {meal.name}
+                        <span>{meal.name}</span>
+                        <Trash2
+                          onClick={() => guest.removeMeal(meal)}
+                          className="w-3 h-3"
+                        />
                       </div>
                       <Select
                         // defaultValue={meal.host.name}

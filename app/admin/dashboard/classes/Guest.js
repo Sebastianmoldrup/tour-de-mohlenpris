@@ -49,6 +49,23 @@ export class Guest {
     return true;
   }
 
+  removeMeal(meal) {
+    if (!meal) {
+      console.error("Invalid meal provided");
+      return false;
+    }
+
+    this.meals = this.meals.filter((m) => {
+      return m !== meal;
+    });
+
+    meal.guests = meal.guests.filter((guest) => {
+      return guest !== this;
+    });
+
+    return true;
+  }
+
   hasMetGuest(guest) {
     return this.meals.some((meal) => {
       return meal.hasGuestVisited(guest);

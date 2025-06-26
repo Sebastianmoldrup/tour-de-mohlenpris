@@ -3,6 +3,7 @@
 // NextJS imports
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 // Supabase client import
 import { createClient } from "@/utils/supabase/client/browserClient";
@@ -60,7 +61,14 @@ export default function Navbar() {
    * */
   return (
     <nav className="flex justify-between px-4 py-2 bg-gray-800 text-white print:hidden">
-      <h1>
+      <h1 className="flex items-center gap-2 text-xl font-bold">
+        <Image
+          src="/logo.png"
+          alt="Tour De Møhlenpris Logo"
+          width={32}
+          height={32}
+          className="inline-block ml-2"
+        />
         <Link href="/">Tour De Møhlenpris</Link>
       </h1>
       <ul className="flex space-x-4">
