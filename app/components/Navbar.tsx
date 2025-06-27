@@ -60,7 +60,7 @@ export default function Navbar() {
    *  Render the navigation bar with links to home always, and conditionally render login or dashboard/logout links based on session state
    * */
   return (
-    <nav className="flex justify-between px-4 py-2 bg-gray-800 text-white print:hidden">
+    <nav className="fixed top-0 left-0 w-full z-50 flex justify-between px-4 py-4 bg-gray-800 text-white print:hidden">
       <h1 className="flex items-center gap-2 text-xl font-bold">
         <Image
           src="/logo.png"

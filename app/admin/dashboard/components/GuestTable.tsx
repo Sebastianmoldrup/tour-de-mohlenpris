@@ -8,7 +8,7 @@ import Link from "next/link";
 import { HostData, GuestData } from "@/types";
 
 // Import from lucide-react
-import { Users, Trash2 } from "lucide-react";
+import { Users, Trash2, Leaf, Trash } from "lucide-react";
 
 // Class imports
 import { MealAssignment } from "@/app/admin/dashboard/classes/MealAssignment";
@@ -49,12 +49,12 @@ export default function GuestTable({
   const [, setUpdateTrigger] = useState(0);
 
   const mealTypes = ["appetizer", "dinner", "dessert"];
-  const mealTypeNames = {
-    appetizer: "Forrett",
-    dinner: "Middag",
-    dessert: "Dessert",
-  };
-  console.log("Guests", guests);
+  // const mealTypeNames = {
+  //   appetizer: "Forrett",
+  //   dinner: "Middag",
+  //   dessert: "Dessert",
+  // };
+  // console.log("Guests", guests);
 
   // On component mount, initialize MealAssignment and set guests and meals with instance data
   useEffect(() => {
@@ -118,50 +118,6 @@ export default function GuestTable({
         </Link>
       </div>
 
-      {/* Unassigned guests and available meals */}
-      <div className="grid md:grid-cols-2 gap-4 mx-auto my-16">
-        <div className="flex items-center justify-center">
-          <h2 className="text-2xl">Ikke tildelt:</h2>
-          <ul>
-            {guests
-              .filter((guest) => {
-                return guest.meals.length < 3;
-              })
-              .map((guest, index) => {
-                return <li key={index}>{`${guest.name}`}</li>;
-              })}
-          </ul>
-        </div>
-        <div className="space-y-4">
-          <h2 className="text-2xl">Ledige måltider:</h2>
-          <ul className="space-y-4">
-            <li className="grid grid-cols-3 px-2">
-              <span className="border-b-2 pb-1 w-fit">Vert</span>
-              <span className="border-b-2 pb-1 w-fit">Rett</span>
-              <span className="border-b-2 pb-1 w-fit">Kapasitet</span>
-            </li>
-            {allMeals
-              .filter((meal) => {
-                return meal.getGuestCount() < meal.capacity;
-              })
-              .map((meal, index) => {
-                return (
-                  <li
-                    key={index}
-                    className="bg-green-200 px-2 py-1 rounded-md grid grid-cols-3"
-                  >
-                    <span className="font-medium">{meal.host.name}</span>
-                    <span className="">{mealTypeNames[meal.type]}</span>
-                    <span className="text-sm text-gray-600">
-                      Kapasitet {Number(meal.getGuestCount())} / {meal.capacity}
-                    </span>
-                  </li>
-                );
-              })}
-          </ul>
-        </div>
-      </div>
-
       {/* Table */}
       <Table>
         <TableHeader>
@@ -179,69 +135,97 @@ export default function GuestTable({
           {guests.map((guest: Guest, index: number) => {
             return (
               <TableRow key={index}>
-                <TableCell className="sticky left-0 bg-white capitalize font-medium max-w-[150px] overflow-hidden">
-                  {guest.name}
+                {/* Guest name */}
+                <TableCell className="capitalize">{guest.name}</TableCell>
+
+                {/* Guest's coguests */}
+                <TableCell className="">
+                  {guest.coguest.length > 0 ? (
+                    <div className="flex items-center h-full gap-2 capitalize">
+                      <Users className="w-5" /> {guest.coguest.length}
+                    </div>
+                  ) : null}
                 </TableCell>
-                <TableCell className="p-0">
-                  <div className="flex items-center h-full gap-2 capitalize">
-                    <Users />
-                    {guest.coguest.length}
-                  </div>
-                </TableCell>
+
+                {/* Guest's allergies */}
                 <TableCell className="text-red-500">
-                  {guest.allergies.join(", ")}
+                  {guest.allergies.length > 0 ? (
+                    <>Allergener: {guest.allergies.join(", ")}</>
+                  ) : null}
                 </TableCell>
-                <TableCell>{guest.vegeterian ? "ja" : null}</TableCell>
-                {guest.meals.map((meal: Meal, index: number) => {
+
+                {/* Guest vegeterian */}
+                <TableCell>
+                  {guest.vegeterian ? <Leaf className="w-5 text-green-500" /> : null}
+                </TableCell>
+
+
+                {/* Guest's meals */}
+                {mealTypes.map((type) => {
+                  const meal = guest.meals.find((meal: Meal) => meal.type === type);
+
                   return (
-                    <TableCell key={index} className="capitalize space-y-2">
-                      <div
-                        title={meal.name}
-                        className="w-[150px] overflow-hidden flex gap-2 items-center"
-                      >
-                        <span>{meal.name}</span>
-                        <Trash2
-                          onClick={() => guest.removeMeal(meal)}
-                          className="w-3 h-3"
-                        />
-                      </div>
-                      <Select
-                        // defaultValue={meal.host.name}
-                        onValueChange={(value) => {
-                          if (meal.name === value) return;
-                          const selectedMeal = allMeals.find(
-                            (m) => m.name === value,
-                          );
-                          if (selectedMeal) {
-                            guest.updateMeal(meal, selectedMeal);
-                          }
-                          // Trigger re-render
-                          setUpdateTrigger((prev) => prev + 1);
-                        }}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder={meal.host.name} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {allMeals
-                            .filter((a: Meal) => {
-                              if (a === meal) return true;
-                              return (
-                                a.type === meal.type && a.hasCapacity(guest)
+                    <TableCell key={type} className="capitalize space-y-2">
+                      {meal ? (
+                        <>
+                          {/* Host name & delete button */}
+                          <div className="flex items-center gap-2">
+                            <Trash2
+                              className="w-4"
+                              onClick={() => {
+                                guest.removeMeal(meal);
+                                setUpdateTrigger((prev) => prev + 1);
+                              }}
+                            />
+                            <div>{meal.host.name}</div>
+                          </div>
+
+                          {/* Select a meal */}
+                          <Select
+                            // defaultValue={meal.host.name}
+                            onValueChange={(value) => {
+                              if (meal.name === value) return;
+                              const selectedMeal = allMeals.find(
+                                (m) => m.name === value,
                               );
-                            })
-                            .map((b: Meal, i: number) => {
-                              return (
-                                <SelectItem value={b.name} key={i}>
-                                  {`${b.host.name} - ${b.name} - plasser ${Number(b.getGuestCount())} / ${b.capacity}`}
-                                </SelectItem>
-                              );
-                            })}
-                        </SelectContent>
-                      </Select>
-                      <div className="text-red-500 text-xs">
-                        Allergener: {guest.allergies.join(", ")}
-                      </div>
+                              if (selectedMeal) {
+                                guest.updateMeal(meal, selectedMeal);
+                              }
+                              // Trigger re-render
+                              setUpdateTrigger((prev) => prev + 1);
+                            }}
+                          >
+                            <SelectTrigger className="w-[180px] md:w-fit">
+                              <SelectValue className="font-semibold" placeholder={meal.host.name} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {allMeals
+                                .filter((a: Meal) => {
+                                  if (a === meal) return true;
+                                  return (
+                                    a.type === meal.type && a.hasCapacity(guest)
+                                  );
+                                })
+                                .map((b: Meal, i: number) => {
+                                  return (
+                                    <SelectItem value={b.name} key={i}>
+                                      {`${b.host.name} - ${b.name} - plasser ${Number(b.getGuestCount())} / ${b.capacity}`}
+                                    </SelectItem>
+                                  );
+                                })}
+                            </SelectContent>
+                          </Select>
+
+                          {/* Allergies */}
+                          {meal.allergies.length > 0 ? (
+                            <div className="text-red-500">{meal.allergies.join(", ")}</div>
+                          ) : (
+                            <div className="text-green-500">Ingen allergier</div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="text-gray-400 italic">Velg rett</div>
+                      )}
                     </TableCell>
                   );
                 })}
@@ -252,4 +236,113 @@ export default function GuestTable({
       </Table>
     </div>
   );
+
+
+  // return (
+  //   <div className="lg:block overscroll-x-scroll overflow-hidden my-6">
+  //     {/* Buttons */}
+  //     <div className="flex items-center justify-center my-6">
+  //       <Link
+  //         href="/admin/dashboard/print"
+  //         className=""
+  //         onClick={handlePrintClick}
+  //       >
+  //         <Button>Utskrift</Button>
+  //       </Link>
+  //     </div>
+  //
+  //     {/* Table */}
+  //     <Table>
+  //       <TableHeader>
+  //         <TableRow>
+  //           <TableHead>Navn</TableHead>
+  //           <TableHead>Medgjester</TableHead>
+  //           <TableHead>Allergier</TableHead>
+  //           <TableHead>Vegetar</TableHead>
+  //           <TableHead>Forrett</TableHead>
+  //           <TableHead>Middag</TableHead>
+  //           <TableHead>Dessert</TableHead>
+  //         </TableRow>
+  //       </TableHeader>
+  //       <TableBody>
+  //         {guests.map((guest: Guest, index: number) => {
+  //           return (
+  //             <TableRow key={index}>
+  //               <TableCell className="sticky left-0 bg-white capitalize font-medium max-w-[150px] overflow-hidden">
+  //                 {guest.name}
+  //               </TableCell>
+  //               <TableCell className="p-0">
+  //                 <div className="flex items-center h-full gap-2 capitalize">
+  //                   <Users className="w-5" />
+  //                   {guest.coguest.length}
+  //                 </div>
+  //               </TableCell>
+  //               <TableCell className="text-red-500">
+  //                 {guest.allergies.join(", ")}
+  //               </TableCell>
+  //               <TableCell>{guest.vegeterian ? "ja" : null}</TableCell>
+  //               {guest.meals.map((meal: Meal, index: number) => {
+  //                 return (
+  //                   <TableCell key={index} className="capitalize space-y-2">
+  //                     <div
+  //                       title={meal.name}
+  //                       className="max-w-[200px] overflow-hidden flex gap-2 items-center"
+  //                     >
+  //                       <Trash2
+  //                         onClick={() => {
+  //                           guest.removeMeal(meal)
+  //
+  //                           setUpdateTrigger((prev) => prev + 1);
+  //                         }}
+  //                         className="w-4 h-4 hover:cursor-pointer hover:text-red-500 transition-colors"
+  //                       />
+  //                       <span className="truncate">{meal.name}</span>
+  //                     </div>
+  //                     <Select
+  //                       // defaultValue={meal.host.name}
+  //                       onValueChange={(value) => {
+  //                         if (meal.name === value) return;
+  //                         const selectedMeal = allMeals.find(
+  //                           (m) => m.name === value,
+  //                         );
+  //                         if (selectedMeal) {
+  //                           guest.updateMeal(meal, selectedMeal);
+  //                         }
+  //                         // Trigger re-render
+  //                         setUpdateTrigger((prev) => prev + 1);
+  //                       }}
+  //                     >
+  //                       <SelectTrigger className="w-[180px] md:w-fit">
+  //                         <SelectValue className="font-semibold" placeholder={meal.host.name} />
+  //                       </SelectTrigger>
+  //                       <SelectContent>
+  //                         {allMeals
+  //                           .filter((a: Meal) => {
+  //                             if (a === meal) return true;
+  //                             return (
+  //                               a.type === meal.type && a.hasCapacity(guest)
+  //                             );
+  //                           })
+  //                           .map((b: Meal, i: number) => {
+  //                             return (
+  //                               <SelectItem value={b.name} key={i}>
+  //                                 {`${b.host.name} - ${b.name} - plasser ${Number(b.getGuestCount())} / ${b.capacity}`}
+  //                               </SelectItem>
+  //                             );
+  //                           })}
+  //                       </SelectContent>
+  //                     </Select>
+  //                     <div className="text-red-500 text-xs">
+  //                       Allergener: {guest.allergies.join(", ")}
+  //                     </div>
+  //                   </TableCell>
+  //                 );
+  //               })}
+  //             </TableRow>
+  //           );
+  //         })}
+  //       </TableBody>
+  //     </Table>
+  //   </div>
+  // );
 }

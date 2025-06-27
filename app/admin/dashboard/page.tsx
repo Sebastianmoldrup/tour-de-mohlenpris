@@ -13,7 +13,7 @@ export default async function DashboardPage() {
   const { hostsData, guestsData }: { hostsData: HostData[]; guestsData: GuestData[] } = await getSheetsData();
 
   return (
-    <main className="flex w-full justify-center items-center">
+    <main className="flex w-full min-h-screen justify-center items-center mt-24">
       {/* <GuestTable hostsData={hostsData} guestsData={guestsData} /> */}
       <ClientDashboard hostsData={hostsData} guestsData={guestsData} />
     </main>
