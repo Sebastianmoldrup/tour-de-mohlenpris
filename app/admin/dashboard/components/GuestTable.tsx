@@ -8,7 +8,7 @@ import Link from "next/link";
 import { HostData, GuestData } from "@/types";
 
 // Import from lucide-react
-import { Users, Trash2, Leaf, Trash } from "lucide-react";
+import { Users, Trash2, Leaf } from "lucide-react";
 
 // Class imports
 import { MealAssignment } from "@/app/admin/dashboard/classes/MealAssignment";
