@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     "Bli med på Tour de Møhlenpris – en sosial matopplevelse i Bergen",
   icons: {
     icon: "/favicon.png",
+    type: "image/png",
   },
 };
 
