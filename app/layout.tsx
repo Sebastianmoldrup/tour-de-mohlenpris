@@ -18,9 +18,6 @@ export const metadata: Metadata = {
   title: "Tour De Møhlenpris",
   description:
     "Bli med på Tour de Møhlenpris – en sosial matopplevelse i Bergen",
-  icons: {
-    icon: "/favicon.png",
-  },
 };
 
 export default function RootLayout({

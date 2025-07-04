@@ -150,13 +150,16 @@ export default function GuestTable({
 
                 {/* Guest vegeterian */}
                 <TableCell>
-                  {guest.vegeterian ? <Leaf className="w-5 text-green-500" /> : null}
+                  {guest.vegeterian ? (
+                    <Leaf className="w-5 text-green-500" />
+                  ) : null}
                 </TableCell>
-
 
                 {/* Guest's meals */}
                 {mealTypes.map((type) => {
-                  const meal = guest.meals.find((meal: Meal) => meal.type === type);
+                  const meal = guest.meals.find(
+                    (meal: Meal) => meal.type === type,
+                  );
 
                   return (
                     <TableCell key={type} className="capitalize space-y-2">
@@ -212,9 +215,13 @@ export default function GuestTable({
 
                           {/* Allergies */}
                           {meal.allergies.length > 0 ? (
-                            <div className="text-red-500">{meal.allergies.join(", ")}</div>
+                            <div className="text-red-500">
+                              {meal.allergies.join(", ")}
+                            </div>
                           ) : (
-                            <div className="text-green-500">Ingen allergier</div>
+                            <div className="text-green-500">
+                              Ingen allergier
+                            </div>
                           )}
                         </>
                       ) : (
